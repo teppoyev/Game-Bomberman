@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Game_Bomberman"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="1080" Width="1920"
         WindowState="Maximized" WindowStyle="None" Background="Black">
-    <Page x:Name="splashImage" Opacity="0.0">
+    <Page x:Name="splashImage" Opacity="0.0" Cursor="None">
         <Page.Background>
             <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/logo.png" Stretch="Uniform"></ImageBrush>
         </Page.Background>

@@ -5,15 +5,18 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Game_Bomberman"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="1080" d:DesignWidth="1920"
       Title="MainMenu">
     <Page.Background>
         <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/mainTheme.jpeg" Stretch="Uniform"></ImageBrush>
     </Page.Background>
-
-    <StackPanel Margin="5">
-        <Label Margin="5">Пример обычной страницы</Label>
-        <Button Margin="5,0,5,0" Padding="5">OK</Button>
-        <Button Padding="5" Margin="5">Close</Button>
-    </StackPanel>
+    <Canvas>
+        <Image x:Name="logoImage" Source="pack://siteoforigin:,,,/Resources/gameLogo.png" Opacity="0.0"/>
+        <Image x:Name="quitImage" Source="pack://siteoforigin:,,,/Resources/requestForExit.png" Opacity="0.0"/>
+        <StackPanel x:Name="ButtonsPanel" Canvas.Bottom="50" IsEnabled="false">
+        </StackPanel>
+        <StackPanel x:Name="quitButtonsPanel" IsEnabled="false" Orientation="Horizontal">
+        </StackPanel>
+        <MediaElement x:Name="menuMusic" Source="pack://siteoforigin:,,,/Resources/mainMenuTheme.mp3" LoadedBehavior="Manual"/>
+    </Canvas>
 </Page>
