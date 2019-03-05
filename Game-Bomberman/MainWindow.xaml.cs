@@ -20,9 +20,12 @@ namespace Game_Bomberman
     /// </summary>
     public partial class MainWindow : Window
     {
+        static public double width = 1920.0, height = 1080.0;
         public MainWindow()
         {
             InitializeComponent();
+            Width = width;
+            Height = height;
             ShowLogos();
         }
 

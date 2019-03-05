@@ -1,0 +1,15 @@
+﻿<Page x:Class="Game_Bomberman.Battle11"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Game_Bomberman"
+      mc:Ignorable="d" 
+      d:DesignHeight="1080" d:DesignWidth="1920"
+      Title="Battle11" Background="Black">
+    <Canvas x:Name="grid1">
+        <Image x:Name="quitImage" Source="pack://siteoforigin:,,,/Resources/requestForExit.png" Opacity="0.0"/>
+        <StackPanel x:Name="quitButtonsPanel" IsEnabled="false" Orientation="Horizontal">
+        </StackPanel>
+    </Canvas>
+</Page>

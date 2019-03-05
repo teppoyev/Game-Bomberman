@@ -57,6 +57,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Battle11.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -68,6 +72,14 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Battle.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Battle.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Battle11.xaml.cs">
+      <DependentUpon>Battle11.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logos.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -101,6 +113,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Battle.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Battle.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Logos.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Logos.Designer.cs</LastGenOutput>
@@ -142,6 +158,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\Debug\Resources\requestForExit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\battle11.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\block.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\easyblock.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mob.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\player.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

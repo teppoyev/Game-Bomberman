@@ -26,8 +26,8 @@ namespace Game_Bomberman
         public MainMenu()
         {
             InitializeComponent();
-            logoImage.Width = quitImage.Width = SystemParameters.WorkArea.Width;
-            logoImage.Height = logoImage.Height = SystemParameters.WorkArea.Height;
+            logoImage.Width = quitImage.Width = MainWindow.width;
+            logoImage.Height = logoImage.Height = MainWindow.height;
             ShowLogo();
         }
 
@@ -54,7 +54,7 @@ namespace Game_Bomberman
                     BorderBrush = Brushes.Transparent,
                     Foreground = Brushes.Yellow,
                     FontFamily = new FontFamily("STARWARS"),
-                    FontSize = SystemParameters.WorkArea.Height / 16.0
+                    FontSize = MainWindow.height / 16.0
                 };
                 ButtonsPanel.Children.Add(btn);
             }
@@ -73,16 +73,16 @@ namespace Game_Bomberman
         {
             menuMusic.Play();
             ButtonsPanel.IsEnabled = true;
-            ButtonsPanel.Width = SystemParameters.WorkArea.Width / 2;
-            Canvas.SetLeft(ButtonsPanel, SystemParameters.WorkArea.Width / 4.0);
-            Canvas.SetBottom(ButtonsPanel, SystemParameters.WorkArea.Height / 4.0);
+            ButtonsPanel.Width = MainWindow.width / 2;
+            Canvas.SetLeft(ButtonsPanel, MainWindow.width / 4.0);
+            Canvas.SetBottom(ButtonsPanel, MainWindow.height / 4.0);
             ButtonsPanel.Children.Add(new Label()
             {
                 Background = Brushes.Transparent,
                 BorderBrush = Brushes.Transparent,
                 Foreground = Brushes.Yellow,
                 FontFamily = new FontFamily("STARWARS"),
-                FontSize = SystemParameters.WorkArea.Height / 16.0,
+                FontSize = MainWindow.height / 16.0,
                 Content = Menu.pressAnyButton,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 Opacity = 1.0
@@ -105,7 +105,7 @@ namespace Game_Bomberman
 
         private void OnClickNew(object obj, EventArgs e)
         {
-
+            ((MainWindow)Parent).Content = new Battle11();
         }
 
         private void OnClickLoad(object obj, EventArgs e)
@@ -126,16 +126,16 @@ namespace Game_Bomberman
             quitImage.Opacity = 1.0;
             quitButtonsPanel.IsEnabled = true;
             quitButtonsPanel.Width = 800.0;
-            quitButtonsPanel.Height = SystemParameters.WorkArea.Height / 8.0;
-            Canvas.SetLeft(quitButtonsPanel, (SystemParameters.WorkArea.Width - 800.0) / 2.0);
-            Canvas.SetBottom(quitButtonsPanel, SystemParameters.WorkArea.Height * 3.0 / 8.0);
+            quitButtonsPanel.Height = MainWindow.height / 8.0;
+            Canvas.SetLeft(quitButtonsPanel, (MainWindow.width - 800.0) / 2.0);
+            Canvas.SetBottom(quitButtonsPanel, MainWindow.height * 3.0 / 8.0);
             quitButtonsPanel.Children.Add(new Button()
             {
                 Background = Brushes.Transparent,
                 BorderBrush = Brushes.Transparent,
                 Foreground = Brushes.Yellow,
                 FontFamily = new FontFamily("STARWARS"),
-                FontSize = SystemParameters.WorkArea.Height / 16.0,
+                FontSize = MainWindow.height / 16.0,
                 Content = Menu.ok,
                 IsDefault = true,
                 Width = width,
@@ -148,7 +148,7 @@ namespace Game_Bomberman
                 BorderBrush = Brushes.Transparent,
                 Foreground = Brushes.Yellow,
                 FontFamily = new FontFamily("STARWARS"),
-                FontSize = SystemParameters.WorkArea.Height / 16.0,
+                FontSize = MainWindow.height / 16.0,
                 Content = Menu.cancel,
                 IsCancel = true,
                 Width = width
