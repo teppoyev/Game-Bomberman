@@ -81,6 +81,14 @@
     <Compile Include="Battle11.xaml.cs">
       <DependentUpon>Battle11.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Game Logic\Block.cs" />
+    <Compile Include="Game Logic\Creature.cs" />
+    <Compile Include="Game Logic\Gabaijito.cs" />
+    <Compile Include="Game Logic\Leaves.cs" />
+    <Compile Include="Game Logic\Object.cs" />
+    <Compile Include="Game Logic\Player.cs" />
+    <Compile Include="Game Logic\Stone.cs" />
+    <Compile Include="HelpfulFunctions.cs" />
     <Compile Include="Logos.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -173,6 +181,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\player.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BackgroundOfBattle.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BackbackgroundOfBattle.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\leaves.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

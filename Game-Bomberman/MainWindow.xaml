@@ -7,6 +7,43 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="1080" Width="1920"
         WindowState="Maximized" WindowStyle="None" Background="Black">
+    <Window.Resources>
+        <Style x:Key="StarWarsStyle">
+            <Style.Setters>
+                <Setter Property="Control.Background" Value = "Transparent"></Setter>
+                <Setter Property="Control.BorderBrush" Value = "Transparent"></Setter>
+                <Setter Property="Control.Foreground" Value = "Yellow"></Setter>
+                <Setter Property="Control.FontFamily" Value="STARWARS"></Setter>
+                <Setter Property="Control.FontSize" Value="67.5"></Setter>
+                <Setter Property="Control.FocusVisualStyle" Value="{x:Null}"></Setter>
+            </Style.Setters>
+        </Style>
+        <Style x:Key="StarWarsButtonStyle" BasedOn="{StaticResource StarWarsStyle}">
+            <Style.Setters>
+                <Setter Property="Control.Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border x:Name="border" Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="Button.IsFocused" Value="True">
+                    <Setter Property="Button.Background" >
+                        <Setter.Value>
+                            <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                                <GradientStop Color="#FF80F9FF" Offset="0.59"/>
+                                <GradientStop Color="#FFD8FBFD" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Page x:Name="splashImage" Opacity="0.0" Cursor="None">
         <Page.Background>
             <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/logo.png" Stretch="Uniform"></ImageBrush>

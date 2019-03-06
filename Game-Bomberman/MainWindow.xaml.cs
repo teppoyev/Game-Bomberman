@@ -90,5 +90,45 @@ namespace Game_Bomberman
         {
             Content = new MainMenu();
         }
+
+        private void OnMouseEnter(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        private void OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        private void Element_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ((Control)sender).Background = new SolidColorBrush(Colors.LightBlue);
+        }
+
+        private void Element_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ((Control)sender).Background = Brushes.Transparent;
+        }
     }
 }
+
+/*<EventTrigger RoutedEvent="Mouse.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard >
+                            <ColorAnimation From="Red" To="#FF7F7F" Duration="0:0:0" Storyboard.TargetProperty="Background.Color"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Mouse.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation From="#FF7F7F" To="Red" Duration="0:0:0.5" Storyboard.TargetProperty="Background.Color"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>*/

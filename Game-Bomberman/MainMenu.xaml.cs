@@ -15,6 +15,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Game_Bomberman
 {
@@ -23,6 +24,7 @@ namespace Game_Bomberman
     /// </summary>
     public partial class MainMenu : Page
     {
+        DispatcherTimer timer1;
         public MainMenu()
         {
             InitializeComponent();
@@ -50,23 +52,32 @@ namespace Game_Bomberman
             {
                 var btn = new Button()
                 {
-                    Background = Brushes.Transparent,
-                    BorderBrush = Brushes.Transparent,
-                    Foreground = Brushes.Yellow,
-                    FontFamily = new FontFamily("STARWARS"),
-                    FontSize = MainWindow.height / 16.0
+                    Style = (Style)FindResource("StarWarsButtonStyle")
                 };
                 ButtonsPanel.Children.Add(btn);
             }
             ((Button)(ButtonsPanel.Children[0])).Content = Menu.newGame;
             ((Button)(ButtonsPanel.Children[0])).Click += OnClickNew;
+            ((Button)(ButtonsPanel.Children[0])).IsDefault = true;
+            ((Button)(ButtonsPanel.Children[0])).Focus();
             ((Button)(ButtonsPanel.Children[1])).Content = Menu.loadGame;
-            ((Button)(ButtonsPanel.Children[3])).Click += OnClickLoad;
+            ((Button)(ButtonsPanel.Children[1])).Click += OnClickLoad;
             ((Button)(ButtonsPanel.Children[2])).Content = Menu.settings;
-            ((Button)(ButtonsPanel.Children[3])).Click += OnClickSettings;
+            ((Button)(ButtonsPanel.Children[2])).Click += OnClickSettings;
             ((Button)(ButtonsPanel.Children[3])).Content = Menu.quitGame;
             ((Button)(ButtonsPanel.Children[3])).Click += OnClickQuit;
             ((Button)(ButtonsPanel.Children[3])).IsCancel = true;
+            timer1 = new DispatcherTimer()
+            {
+                Interval = new TimeSpan(0, 0, 0, 0, 10)
+            };
+            timer1.Tick += Timer1_Tick;
+            timer1.Start();
+        }
+
+        private void Timer1_Tick(object obj, EventArgs e)
+        {
+            timer1.Stop();
         }
 
         private void IncludingLabel(object obj, EventArgs e)
@@ -78,14 +89,10 @@ namespace Game_Bomberman
             Canvas.SetBottom(ButtonsPanel, MainWindow.height / 4.0);
             ButtonsPanel.Children.Add(new Label()
             {
-                Background = Brushes.Transparent,
-                BorderBrush = Brushes.Transparent,
-                Foreground = Brushes.Yellow,
-                FontFamily = new FontFamily("STARWARS"),
-                FontSize = MainWindow.height / 16.0,
+                Style = (Style)FindResource("StarWarsStyle"),
                 Content = Menu.pressAnyButton,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
-                Opacity = 1.0
+                Opacity = 0.0
             });
             Keyboard.FocusedElement.KeyDown += IncludingButtons;
             Tmr_Tick(((Label)ButtonsPanel.Children[0]).Opacity);
@@ -105,6 +112,7 @@ namespace Game_Bomberman
 
         private void OnClickNew(object obj, EventArgs e)
         {
+            if (timer1.IsEnabled) return;
             ((MainWindow)Parent).Content = new Battle11();
         }
 
@@ -120,6 +128,7 @@ namespace Game_Bomberman
 
         private void OnClickQuit(object sender, EventArgs e)
         {
+            if (timer1.IsEnabled) return;
             const double width = 250.0, margin = 50.0;
             ButtonsPanel.IsEnabled = false;
             ButtonsPanel.Opacity = 0.0;
@@ -131,11 +140,7 @@ namespace Game_Bomberman
             Canvas.SetBottom(quitButtonsPanel, MainWindow.height * 3.0 / 8.0);
             quitButtonsPanel.Children.Add(new Button()
             {
-                Background = Brushes.Transparent,
-                BorderBrush = Brushes.Transparent,
-                Foreground = Brushes.Yellow,
-                FontFamily = new FontFamily("STARWARS"),
-                FontSize = MainWindow.height / 16.0,
+                Style = (Style)FindResource("StarWarsButtonStyle"),
                 Content = Menu.ok,
                 IsDefault = true,
                 Width = width,
@@ -144,16 +149,14 @@ namespace Game_Bomberman
             ((Button)quitButtonsPanel.Children[0]).Click += OnClickQuitOk;
             quitButtonsPanel.Children.Add(new Button()
             {
-                Background = Brushes.Transparent,
-                BorderBrush = Brushes.Transparent,
-                Foreground = Brushes.Yellow,
-                FontFamily = new FontFamily("STARWARS"),
-                FontSize = MainWindow.height / 16.0,
+                Style = (Style)FindResource("StarWarsButtonStyle"),
                 Content = Menu.cancel,
                 IsCancel = true,
-                Width = width
+                Width = width,
+                Focusable = true
             });
             ((Button)quitButtonsPanel.Children[1]).Click += OnClickQuitCancel;
+            ((Button)quitButtonsPanel.Children[0]).Focus();
         }
 
         private void OnClickQuitOk(object obj, EventArgs e)
@@ -168,6 +171,7 @@ namespace Game_Bomberman
             quitButtonsPanel.Children.RemoveRange(0, 2);
             ButtonsPanel.Opacity = 1.0;
             ButtonsPanel.IsEnabled = true;
+            ((Button)(ButtonsPanel.Children[0])).Focus();
         }
     }
 }

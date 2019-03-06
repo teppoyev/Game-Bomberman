@@ -63,6 +63,26 @@ namespace Game_Bomberman {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BackbackgroundOfBattle {
+            get {
+                object obj = ResourceManager.GetObject("BackbackgroundOfBattle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap BackgroundOfBattle {
+            get {
+                object obj = ResourceManager.GetObject("BackgroundOfBattle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap battle11 {
             get {
                 object obj = ResourceManager.GetObject("battle11", resourceCulture);
@@ -86,6 +106,16 @@ namespace Game_Bomberman {
         internal static System.Drawing.Bitmap easyblock {
             get {
                 object obj = ResourceManager.GetObject("easyblock", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap leaves {
+            get {
+                object obj = ResourceManager.GetObject("leaves", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

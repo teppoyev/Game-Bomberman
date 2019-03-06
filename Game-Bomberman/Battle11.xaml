@@ -6,10 +6,30 @@
       xmlns:local="clr-namespace:Game_Bomberman"
       mc:Ignorable="d" 
       d:DesignHeight="1080" d:DesignWidth="1920"
-      Title="Battle11" Background="Black">
-    <Canvas x:Name="grid1">
-        <Image x:Name="quitImage" Source="pack://siteoforigin:,,,/Resources/requestForExit.png" Opacity="0.0"/>
-        <StackPanel x:Name="quitButtonsPanel" IsEnabled="false" Orientation="Horizontal">
-        </StackPanel>
-    </Canvas>
+      Title="Battle11" Cursor="None">
+    <Page.Background>
+        <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/BackbackgroundOfBattle.jpg" TileMode="FlipXY" Stretch="Fill"/>
+    </Page.Background>
+    <Grid x:Name="grid0" Loaded="grid0_Loaded" Width="1920" Height="1080">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="53"/>
+            <RowDefinition Height="975"/>
+            <RowDefinition Height="52"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="23"/>
+            <ColumnDefinition Width="1875"/>
+            <ColumnDefinition Width="22"/>
+        </Grid.ColumnDefinitions>
+        <Canvas x:Name="grid1" Grid.Row="1" Grid.Column="1">
+
+            <Canvas.Background>
+                <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/BackgroundOfBattle.jpg" TileMode="Tile"/>
+            </Canvas.Background>
+            <Image x:Name="quitImage" Source="pack://siteoforigin:,,,/Resources/requestForExit.png" Opacity="0.0" Panel.ZIndex="100" Margin="-23,-53,0,0" />
+            <StackPanel x:Name="quitButtonsPanel" IsEnabled="false" Orientation="Horizontal" Panel.ZIndex="100">
+            </StackPanel>
+        </Canvas>
+
+    </Grid>
 </Page>
