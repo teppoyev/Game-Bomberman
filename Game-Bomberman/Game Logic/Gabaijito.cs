@@ -12,7 +12,6 @@ namespace Game_Bomberman.Game_Logic
         {
             Speed = 5;
             Health = 20;
-            X = 0; Y = 0;
             Buffs = new ushort[maxNumberOfBuffs];
             for (int i = 0; i < maxNumberOfBuffs; ++i)
             {

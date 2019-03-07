@@ -11,10 +11,8 @@ namespace Game_Bomberman.Game_Logic
     {
         public static int standartSize = 75;
 
-        private double size = 75.0;
+        private double size = standartSize;
         private ushort health;
-        private double x;
-        private double y;
         private System.Drawing.Bitmap texture;
         private System.Windows.Shapes.Rectangle body = new System.Windows.Shapes.Rectangle()
         {
@@ -23,8 +21,6 @@ namespace Game_Bomberman.Game_Logic
             Fill = System.Windows.Media.Brushes.Magenta
         };
 
-        public double X { get => x; set => x = value; }
-        public double Y { get => y; set => y = value; }
         public Bitmap Texture { get => texture; set => texture = value; }
         public double Size { get => size; set => size = value; }
         public ushort Health { get => health; set => health = value; }

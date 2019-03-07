@@ -11,7 +11,6 @@ namespace Game_Bomberman.Game_Logic
         public Stone()
         {
             Health = 1000;
-            X = 0; Y = 0;
             MinDamageToHit = 1000;
             Texture = Battle.block;
             Body = new System.Windows.Shapes.Rectangle

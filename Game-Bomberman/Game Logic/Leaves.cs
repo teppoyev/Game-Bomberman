@@ -11,7 +11,6 @@ namespace Game_Bomberman.Game_Logic
         public Leaves()
         {
             Health = 5;
-            X = 0; Y = 0;
             MinDamageToHit = 1;
             Texture = Battle.leaves;
             Body = new System.Windows.Shapes.Rectangle

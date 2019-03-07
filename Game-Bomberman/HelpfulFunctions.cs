@@ -23,5 +23,29 @@ namespace Game_Bomberman
 
             return new ImageBrush(bitmapSource);
         }
+
+        public static double AbsoluteCoord(double coord)
+        {
+            return Game_Logic.Object.standartSize * coord;
+        }
+
+        public static double AbsoluteCoord(double coord, double size)
+        {
+            return size * coord;
+        }
+
+        public static int RelativeCoord(double coord)
+        {
+            double a_ = coord / Game_Logic.Object.standartSize;
+            if (a_ - Math.Round(a_) >= 0) return Convert.ToInt32(Math.Round(a_));
+            else return Convert.ToInt32(Math.Round(a_)) - 1;
+        }
+
+        public static int RelativeCoord(double coord, double size)
+        {
+            double a_ = coord / size;
+            if (a_ - Math.Round(a_) >= 0) return Convert.ToInt32(Math.Round(a_));
+            else return Convert.ToInt32(Math.Round(a_)) - 1;
+        }
     }
 }

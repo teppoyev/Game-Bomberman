@@ -23,7 +23,7 @@ namespace Game_Bomberman
     {
         public const double speed = 5.0;
         public const int numberOfDestroyableBlocks = 120;
-        private int numberOfEnemies = 3;
+        public const int numberOfEnemies = 3;
         public int widthOfFieldOfBattle = 25;
         public int heightOfFieldOfBattle = 13;
         public int numberOfUnDestroyableBlocks;
@@ -32,6 +32,8 @@ namespace Game_Bomberman
         private int positionOfPlayerInCanvas;
         private double workWidth, workHeight;
         public bool[][] fieldOfBattle;
+        Game_Logic.Player player;
+        Game_Logic.Gabaijito[] gabaijitos = new Game_Logic.Gabaijito[numberOfEnemies];
 
         public Battle11()
         {
@@ -39,14 +41,16 @@ namespace Game_Bomberman
             Width = MainWindow.width; Height = MainWindow.height;
             numberOfUnDestroyableBlocks = ((widthOfFieldOfBattle - 1) / 2) * ((heightOfFieldOfBattle - 1) / 2);
 
-            var player = new Game_Logic.Player();
-            Canvas.SetTop(player.Body, player.Y);
-            Canvas.SetLeft(player.Body, player.X);
+            //put the player's character to the canvas
+            player = new Game_Logic.Player();
+            Canvas.SetTop(player.Body, 0.0);
+            Canvas.SetLeft(player.Body, 0.0);
             player.Body.KeyDown += Player_KeyDown;
             player.Body.KeyUp += Player_KeyUp;
             grid1.Children.Add(player.Body);
             positionOfPlayerInCanvas = grid1.Children.Count - 1;
 
+            //init the field of the battle
             fieldOfBattle = new bool[widthOfFieldOfBattle][];
             for (int i = 0; i < widthOfFieldOfBattle; ++i)
             {
@@ -57,19 +61,21 @@ namespace Game_Bomberman
                 }
             }
 
+            //put undestroyable blocks to the field and to the canvas
             for (int i = 0; i < (widthOfFieldOfBattle - 1) / 2; ++i)
             {
                 for (int j = 0; j < (heightOfFieldOfBattle - 1) / 2; ++j)
                 {
                     var block = new Game_Logic.Stone();
-                    block.X = block.Size * (i * 2 + 1); block.Y = block.Size * (j * 2 + 1);
-                    Canvas.SetLeft(block.Body, block.X); Canvas.SetTop(block.Body, block.Y);
+                    Canvas.SetLeft(block.Body, HelpfulFunctions.AbsoluteCoord(i * 2 + 1));
+                    Canvas.SetTop(block.Body, HelpfulFunctions.AbsoluteCoord(j * 2 + 1));
                     fieldOfBattle[i * 2 + 1][j * 2 + 1] = true;
                     grid1.Children.Add(block.Body);
                 }
             }
 
-            for (int i = 0; i < numberOfDestroyableBlocks; ++i)
+            //put destroyable blocks to field and 
+            /*for (int i = 0; i < numberOfDestroyableBlocks; ++i)
             {
                 Random rnd = new Random();
                 int x0 , y0;
@@ -79,30 +85,35 @@ namespace Game_Bomberman
                     y0 = rnd.Next(heightOfFieldOfBattle);
                 } while (fieldOfBattle[x0][y0] || (x0 == 0 && y0 == 0) || (x0 == 1 && y0 == 0) || (x0 == 0 && y0 == 1));
                 var block = new Game_Logic.Leaves();
-                block.X = block.Size * x0; block.Y = block.Size * y0;
-                Canvas.SetLeft(block.Body, block.X); Canvas.SetTop(block.Body, block.Y);
+                Canvas.SetLeft(block.Body, HelpfulFunctions.AbsoluteCoord(x0));
+                Canvas.SetTop(block.Body, HelpfulFunctions.AbsoluteCoord(y0));
                 fieldOfBattle[x0][y0] = true;
                 grid1.Children.Add(block.Body);
-            }
+            }*/
 
+            //put ememies to field
             for (int i = 0; i < numberOfEnemies; ++i)
             {
-                Random rnd = new Random();
+                Random rnd = new Random(i);
                 int x0, y0;
                 do
                 {
                     x0 = rnd.Next(widthOfFieldOfBattle);
                     y0 = rnd.Next(heightOfFieldOfBattle);
                 } while (fieldOfBattle[x0][y0] || (x0 < widthOfFieldOfBattle / 2 && y0 < heightOfFieldOfBattle / 2));
-                var mob = new Game_Logic.Gabaijito();
-                mob.X = mob.Size * x0; mob.Y = mob.Size * y0;
-                Canvas.SetLeft(mob.Body, mob.X); Canvas.SetTop(mob.Body, mob.Y);
-                fieldOfBattle[x0][y0] = true;
-                grid1.Children.Add(mob.Body);
+                gabaijitos[i] = new Game_Logic.Gabaijito();
+                Canvas.SetLeft(gabaijitos[i].Body, HelpfulFunctions.AbsoluteCoord(x0));
+                Canvas.SetTop(gabaijitos[i].Body, HelpfulFunctions.AbsoluteCoord(y0));
+                grid1.Children.Add(gabaijitos[i].Body);
             }
 
+            //put buffs to the canvas???
+            //...
+
+            //put the focus to the player's character
             grid1.Children[positionOfPlayerInCanvas].Focus();
 
+            //start a timer to check keyboard's events
             timer = new DispatcherTimer()
             {
                 Interval = new TimeSpan(0, 0, 0, 0, 10)
@@ -166,133 +177,363 @@ namespace Game_Bomberman
         private void Timer_Tick(object sender, EventArgs e)
         {
             Rectangle elem = grid1.Children[positionOfPlayerInCanvas] as Rectangle;
+            int x0, y0;
+            double x, y;
             if (movingLeft && !movingRight && (movingUp == movingDown))
             {
                 double realSpeed = speed;
+                x = Canvas.GetLeft(elem); y = Canvas.GetTop(elem);
+                x0 = HelpfulFunctions.RelativeCoord(x - realSpeed); y0 = HelpfulFunctions.RelativeCoord(y);
                 if (Canvas.GetLeft(elem) - realSpeed >= 0.0)
                 {
-                    Canvas.SetLeft(elem, Canvas.GetLeft(elem) - realSpeed);
+                    if (!fieldOfBattle[x0][y0] && y == HelpfulFunctions.AbsoluteCoord(y0))
+                    {
+                        Canvas.SetLeft(elem, Canvas.GetLeft(elem) - realSpeed);
+                    }
+                    else if (!fieldOfBattle[x0][y0] && fieldOfBattle[x0][y0 + 1])
+                    {
+                        if (Canvas.GetTop(elem) - realSpeed >= HelpfulFunctions.AbsoluteCoord(y0))
+                        {
+                            Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed);
+                        }
+                        else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0));
+                    }
+                    else if (fieldOfBattle[x0][y0] && y != HelpfulFunctions.AbsoluteCoord(y0) && !fieldOfBattle[x0][y0 + 1])
+                    {
+                        if (Canvas.GetTop(elem) + elem.Height + realSpeed <= HelpfulFunctions.AbsoluteCoord(y0 + 2))
+                        {
+                            Canvas.SetTop(elem, Canvas.GetTop(elem) + realSpeed);
+                        }
+                        else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0 + 2) - elem.Height);
+                    }
+                    else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0 + 1));
                 }
-                else if (Canvas.GetLeft(elem) != 0.0)
-                {
-                    Canvas.SetLeft(elem, 0.0);
-                }
+                else Canvas.SetLeft(elem, 0.0);
             }
             else if (movingUp && !movingRight && !movingDown && movingLeft)
             {
                 double realSpeed = speed / Math.Sqrt(2);
+                x = Canvas.GetLeft(elem); y = Canvas.GetTop(elem);
+                x0 = HelpfulFunctions.RelativeCoord(x - realSpeed); y0 = HelpfulFunctions.RelativeCoord(y);
                 if (Canvas.GetLeft(elem) - realSpeed >= 0.0)
                 {
-                    Canvas.SetLeft(elem, Canvas.GetLeft(elem) - realSpeed);
+                    if (!fieldOfBattle[x0][y0] && y == HelpfulFunctions.AbsoluteCoord(y0))
+                    {
+                        Canvas.SetLeft(elem, Canvas.GetLeft(elem) - realSpeed);
+                    }
+                    else if (!fieldOfBattle[x0][y0] && fieldOfBattle[x0][y0 + 1])
+                    {
+                        if (Canvas.GetTop(elem) - realSpeed >= HelpfulFunctions.AbsoluteCoord(y0))
+                        {
+                            Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed);
+                        }
+                        else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0));
+                    }
+                    else if (fieldOfBattle[x0][y0] && y != HelpfulFunctions.AbsoluteCoord(y0) && !fieldOfBattle[x0][y0 + 1])
+                    {
+                        /*if (Canvas.GetTop(elem) + elem.Height + realSpeed <= HelpfulFunctions.AbsoluteCoord(y0 + 2))
+                        {
+                            Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed * Math.Sqrt(2));
+                        }
+                        else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0 + 2) - elem.Height);*/
+                    }
+                    else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0 + 1));
                 }
-                else if (Canvas.GetLeft(elem) != 0.0)
-                {
-                    Canvas.SetLeft(elem, 0.0);
-                }
+                else Canvas.SetLeft(elem, 0.0);
+                x = Canvas.GetLeft(elem); y = Canvas.GetTop(elem);
+                x0 = HelpfulFunctions.RelativeCoord(x); y0 = HelpfulFunctions.RelativeCoord(y - realSpeed);
                 if (Canvas.GetTop(elem) - realSpeed >= 0.0)
                 {
-                    Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed);
+                    if (!fieldOfBattle[x0][y0] && x == HelpfulFunctions.AbsoluteCoord(x0))
+                    {
+                        Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed);
+                    }
+                    else if (!fieldOfBattle[x0][y0] && fieldOfBattle[x0 + 1][y0])
+                    {
+                        if (Canvas.GetLeft(elem) - realSpeed >= HelpfulFunctions.AbsoluteCoord(x0))
+                        {
+                            Canvas.SetLeft(elem, Canvas.GetLeft(elem) - realSpeed);
+                        }
+                        else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0));
+                    }
+                    else if (fieldOfBattle[x0][y0] && x != HelpfulFunctions.AbsoluteCoord(x0) && !fieldOfBattle[x0 + 1][y0])
+                    {
+                        /*if (Canvas.GetLeft(elem) + elem.Width + realSpeed <= HelpfulFunctions.AbsoluteCoord(x0 + 2))
+                        {
+                            Canvas.SetLeft(elem, Canvas.GetLeft(elem) + realSpeed);
+                        }
+                        else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0 + 2) - elem.Width);*/
+                    }
+                    else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0 + 1));
                 }
-                else if (Canvas.GetTop(elem) != 0.0)
-                {
-                    Canvas.SetTop(elem, 0.0);
-                }
+                else Canvas.SetTop(elem, 0.0);
             }
             else if (movingUp && !movingDown && (movingLeft == movingRight))
             {
                 double realSpeed = speed;
+                x = Canvas.GetLeft(elem); y = Canvas.GetTop(elem);
+                x0 = HelpfulFunctions.RelativeCoord(x); y0 = HelpfulFunctions.RelativeCoord(y - realSpeed);
                 if (Canvas.GetTop(elem) - realSpeed >= 0.0)
                 {
-                    Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed);
+                    if (!fieldOfBattle[x0][y0] && x == HelpfulFunctions.AbsoluteCoord(x0))
+                    {
+                        Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed);
+                    }
+                    else if (!fieldOfBattle[x0][y0] && fieldOfBattle[x0 + 1][y0])
+                    {
+                        if (Canvas.GetLeft(elem) - realSpeed >= HelpfulFunctions.AbsoluteCoord(x0))
+                        {
+                            Canvas.SetLeft(elem, Canvas.GetLeft(elem) - realSpeed);
+                        }
+                        else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0));
+                    }
+                    else if (fieldOfBattle[x0][y0] && x != HelpfulFunctions.AbsoluteCoord(x0) && !fieldOfBattle[x0 + 1][y0])
+                    {
+                        if (Canvas.GetLeft(elem) + elem.Width + realSpeed <= HelpfulFunctions.AbsoluteCoord(x0 + 2))
+                        {
+                            Canvas.SetLeft(elem, Canvas.GetLeft(elem) + realSpeed);
+                        }
+                        else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0 + 2) - elem.Width);
+                    }
+                    else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0 + 1));
                 }
-                else if (Canvas.GetTop(elem) != 0.0)
-                {
-                    Canvas.SetTop(elem, 0.0);
-                }
+                else Canvas.SetTop(elem, 0.0);
             }
             else if (movingUp && movingRight && !movingDown && !movingLeft)
             {
                 double realSpeed = speed / Math.Sqrt(2);
+                x = Canvas.GetLeft(elem); y = Canvas.GetTop(elem);
+                x0 = HelpfulFunctions.RelativeCoord(x); y0 = HelpfulFunctions.RelativeCoord(y - realSpeed);
                 if (Canvas.GetTop(elem) - realSpeed >= 0.0)
                 {
-                    Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed);
+                    if (!fieldOfBattle[x0][y0] && x == HelpfulFunctions.AbsoluteCoord(x0))
+                    {
+                        Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed);
+                    }
+                    else if (!fieldOfBattle[x0][y0] && fieldOfBattle[x0 + 1][y0])
+                    {
+                        /*if (Canvas.GetLeft(elem) - realSpeed >= HelpfulFunctions.AbsoluteCoord(x0))
+                        {
+                            Canvas.SetLeft(elem, Canvas.GetLeft(elem) - realSpeed);
+                        }
+                        else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0));*/
+                    }
+                    else if (fieldOfBattle[x0][y0] && x != HelpfulFunctions.AbsoluteCoord(x0) && !fieldOfBattle[x0 + 1][y0])
+                    {
+                        if (Canvas.GetLeft(elem) + elem.Width + realSpeed <= HelpfulFunctions.AbsoluteCoord(x0 + 2))
+                        {
+                            Canvas.SetLeft(elem, Canvas.GetLeft(elem) + realSpeed);
+                        }
+                        else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0 + 2) - elem.Width);
+                    }
+                    else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0 + 1));
                 }
-                else if (Canvas.GetTop(elem) != 0.0)
-                {
-                    Canvas.SetTop(elem, 0.0);
-                }
+                else Canvas.SetTop(elem, 0.0);
+                x = Canvas.GetLeft(elem); y = Canvas.GetTop(elem);
+                x0 = HelpfulFunctions.RelativeCoord(x + realSpeed + elem.Width); y0 = HelpfulFunctions.RelativeCoord(y);
                 if (Canvas.GetLeft(elem) + realSpeed + elem.Width <= workWidth)
                 {
-                    Canvas.SetLeft(elem, Canvas.GetLeft(elem) + realSpeed);
+                    if (!fieldOfBattle[x0][y0] && y == HelpfulFunctions.AbsoluteCoord(y0))
+                    {
+                        Canvas.SetLeft(elem, Canvas.GetLeft(elem) + realSpeed);
+                    }
+                    else if (!fieldOfBattle[x0][y0] && fieldOfBattle[x0][y0 + 1])
+                    {
+                        if (Canvas.GetTop(elem) - realSpeed >= HelpfulFunctions.AbsoluteCoord(y0))
+                        {
+                            Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed);
+                        }
+                        else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0));
+                    }
+                    else if (fieldOfBattle[x0][y0] && y != HelpfulFunctions.AbsoluteCoord(y0) && !fieldOfBattle[x0][y0 + 1])
+                    {
+                        /*if (Canvas.GetTop(elem) + elem.Height + realSpeed <= HelpfulFunctions.AbsoluteCoord(y0 + 2))
+                        {
+                            Canvas.SetTop(elem, Canvas.GetTop(elem) + realSpeed);
+                        }
+                        else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0 + 2) - elem.Height);*/
+                    }
+                    else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0 - 1));
                 }
-                else if (Canvas.GetLeft(elem) + elem.Width != workWidth)
-                {
-                    Canvas.SetLeft(elem, workWidth - elem.Width);
-                }
+                else Canvas.SetLeft(elem, workWidth - elem.Width);
             }
             else if (movingRight && !movingLeft && (movingUp == movingDown))
             {
                 double realSpeed = speed;
+                x = Canvas.GetLeft(elem); y = Canvas.GetTop(elem);
+                x0 = HelpfulFunctions.RelativeCoord(x + realSpeed + elem.Width); y0 = HelpfulFunctions.RelativeCoord(y);
                 if (Canvas.GetLeft(elem) + realSpeed + elem.Width <= workWidth)
                 {
-                    Canvas.SetLeft(elem, Canvas.GetLeft(elem) + realSpeed);
+                    if (!fieldOfBattle[x0][y0] && y == HelpfulFunctions.AbsoluteCoord(y0))
+                    {
+                        Canvas.SetLeft(elem, Canvas.GetLeft(elem) + realSpeed);
+                    }
+                    else if (!fieldOfBattle[x0][y0] && fieldOfBattle[x0][y0 + 1])
+                    {
+                        if (Canvas.GetTop(elem) - realSpeed >= HelpfulFunctions.AbsoluteCoord(y0))
+                        {
+                            Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed);
+                        }
+                        else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0));
+                    }
+                    else if (fieldOfBattle[x0][y0] && y != HelpfulFunctions.AbsoluteCoord(y0) && !fieldOfBattle[x0][y0 + 1])
+                    {
+                        if (Canvas.GetTop(elem) + elem.Height + realSpeed <= HelpfulFunctions.AbsoluteCoord(y0 + 2))
+                        {
+                            Canvas.SetTop(elem, Canvas.GetTop(elem) + realSpeed);
+                        }
+                        else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0 + 2) - elem.Height);
+                    }
+                    else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0 - 1));
                 }
-                else if (Canvas.GetLeft(elem) + elem.Width != workWidth)
-                {
-                    Canvas.SetLeft(elem, workWidth - elem.Width);
-                }
+                else Canvas.SetLeft(elem, workWidth - elem.Width);
             }
             else if (!movingUp && movingRight && movingDown && !movingLeft)
             {
                 double realSpeed = speed / Math.Sqrt(2);
+                x = Canvas.GetLeft(elem); y = Canvas.GetTop(elem);
+                x0 = HelpfulFunctions.RelativeCoord(x + realSpeed + elem.Width); y0 = HelpfulFunctions.RelativeCoord(y);
                 if (Canvas.GetLeft(elem) + realSpeed + elem.Width <= workWidth)
                 {
-                    Canvas.SetLeft(elem, Canvas.GetLeft(elem) + realSpeed);
+                    if (!fieldOfBattle[x0][y0] && y == HelpfulFunctions.AbsoluteCoord(y0))
+                    {
+                        Canvas.SetLeft(elem, Canvas.GetLeft(elem) + realSpeed);
+                    }
+                    else if (!fieldOfBattle[x0][y0] && fieldOfBattle[x0][y0 + 1])
+                    {
+                        /*if (Canvas.GetTop(elem) - realSpeed >= HelpfulFunctions.AbsoluteCoord(y0))
+                        {
+                            Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed);
+                        }
+                        else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0));*/
+                    }
+                    else if (fieldOfBattle[x0][y0] && y != HelpfulFunctions.AbsoluteCoord(y0) && !fieldOfBattle[x0][y0 + 1])
+                    {
+                        if (Canvas.GetTop(elem) + elem.Height + realSpeed <= HelpfulFunctions.AbsoluteCoord(y0 + 2))
+                        {
+                            Canvas.SetTop(elem, Canvas.GetTop(elem) + realSpeed);
+                        }
+                        else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0 + 2) - elem.Height);
+                    }
+                    else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0 - 1));
                 }
-                else if (Canvas.GetLeft(elem) + elem.Width != workWidth)
-                {
-                    Canvas.SetLeft(elem, workWidth - elem.Width);
-                }
+                else Canvas.SetLeft(elem, workWidth - elem.Width);
+                x = Canvas.GetLeft(elem); y = Canvas.GetTop(elem);
+                x0 = HelpfulFunctions.RelativeCoord(x); y0 = HelpfulFunctions.RelativeCoord(y + realSpeed + elem.Height);
                 if (Canvas.GetTop(elem) + realSpeed + elem.Height <= workHeight)
                 {
-                    Canvas.SetTop(elem, Canvas.GetTop(elem) + realSpeed);
+                    if (!fieldOfBattle[x0][y0] && x == HelpfulFunctions.AbsoluteCoord(x0))
+                    {
+                        Canvas.SetTop(elem, Canvas.GetTop(elem) + realSpeed);
+                    }
+                    else if (!fieldOfBattle[x0][y0] && fieldOfBattle[x0 + 1][y0])
+                    {
+                        /*if (Canvas.GetLeft(elem) - realSpeed >= HelpfulFunctions.AbsoluteCoord(x0))
+                        {
+                            Canvas.SetLeft(elem, Canvas.GetLeft(elem) - realSpeed);
+                        }
+                        else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0));*/
+                    }
+                    else if (fieldOfBattle[x0][y0] && x != HelpfulFunctions.AbsoluteCoord(x0) && !fieldOfBattle[x0 + 1][y0])
+                    {
+                       if (Canvas.GetLeft(elem) + elem.Width + realSpeed <= HelpfulFunctions.AbsoluteCoord(x0 + 2))
+                        {
+                            Canvas.SetLeft(elem, Canvas.GetLeft(elem) + realSpeed);
+                        }
+                        else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0 + 2) - elem.Width);
+                    }
+                    else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0 - 1));
                 }
-                else if (Canvas.GetTop(elem) + elem.Height != workHeight)
-                {
-                    Canvas.SetTop(elem, workHeight - elem.Height);
-                }
+                else Canvas.SetTop(elem, workHeight - elem.Height);
             }
             else if (!movingUp && movingDown && (movingLeft == movingRight))
             {
                 double realSpeed = speed;
+                x = Canvas.GetLeft(elem); y = Canvas.GetTop(elem);
+                x0 = HelpfulFunctions.RelativeCoord(x); y0 = HelpfulFunctions.RelativeCoord(y + realSpeed + elem.Height);
                 if (Canvas.GetTop(elem) + realSpeed + elem.Height <= workHeight)
                 {
-                    Canvas.SetTop(elem, Canvas.GetTop(elem) + realSpeed);
+                    if (!fieldOfBattle[x0][y0] && x == HelpfulFunctions.AbsoluteCoord(x0))
+                    {
+                        Canvas.SetTop(elem, Canvas.GetTop(elem) + realSpeed);
+                    }
+                    else if (!fieldOfBattle[x0][y0] && fieldOfBattle[x0 + 1][y0])
+                    {
+                        if (Canvas.GetLeft(elem) - realSpeed >= HelpfulFunctions.AbsoluteCoord(x0))
+                        {
+                            Canvas.SetLeft(elem, Canvas.GetLeft(elem) - realSpeed);
+                        }
+                        else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0));
+                    }
+                    else if (fieldOfBattle[x0][y0] && x != HelpfulFunctions.AbsoluteCoord(x0) && !fieldOfBattle[x0 + 1][y0])
+                    {
+                        if (Canvas.GetLeft(elem) + elem.Width + realSpeed <= HelpfulFunctions.AbsoluteCoord(x0 + 2))
+                        {
+                            Canvas.SetLeft(elem, Canvas.GetLeft(elem) + realSpeed);
+                        }
+                        else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0 + 2) - elem.Width);
+                    }
+                    else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0 - 1));
                 }
-                else if (Canvas.GetTop(elem) + elem.Height != workHeight)
-                {
-                    Canvas.SetTop(elem, workHeight - elem.Height);
-                }
+                else Canvas.SetTop(elem, workHeight - elem.Height);
             }
             else if (!movingUp && !movingRight && movingDown && movingLeft)
             {
                 double realSpeed = speed / Math.Sqrt(2);
+                x = Canvas.GetLeft(elem); y = Canvas.GetTop(elem);
+                x0 = HelpfulFunctions.RelativeCoord(x); y0 = HelpfulFunctions.RelativeCoord(y + realSpeed + elem.Height);
                 if (Canvas.GetTop(elem) + realSpeed + elem.Height <= workHeight)
                 {
-                    Canvas.SetTop(elem, Canvas.GetTop(elem) + realSpeed);
+                    if (!fieldOfBattle[x0][y0] && x == HelpfulFunctions.AbsoluteCoord(x0))
+                    {
+                        Canvas.SetTop(elem, Canvas.GetTop(elem) + realSpeed);
+                    }
+                    else if (!fieldOfBattle[x0][y0] && fieldOfBattle[x0 + 1][y0])
+                    {
+                        if (Canvas.GetLeft(elem) - realSpeed >= HelpfulFunctions.AbsoluteCoord(x0))
+                        {
+                            Canvas.SetLeft(elem, Canvas.GetLeft(elem) - realSpeed);
+                        }
+                        else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0));
+                    }
+                    else if (fieldOfBattle[x0][y0] && x != HelpfulFunctions.AbsoluteCoord(x0) && !fieldOfBattle[x0 + 1][y0])
+                    {
+                        /*if (Canvas.GetLeft(elem) + elem.Width + realSpeed <= HelpfulFunctions.AbsoluteCoord(x0 + 2))
+                        {
+                            Canvas.SetLeft(elem, Canvas.GetLeft(elem) + realSpeed);
+                        }
+                        else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0 + 2) - elem.Width);*/
+                    }
+                    else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0 - 1));
                 }
-                else if (Canvas.GetTop(elem) + elem.Height != workHeight)
-                {
-                    Canvas.SetTop(elem, workHeight - elem.Height);
-                }
+                else Canvas.SetTop(elem, workHeight - elem.Height);
+                x = Canvas.GetLeft(elem); y = Canvas.GetTop(elem);
+                x0 = HelpfulFunctions.RelativeCoord(x - realSpeed); y0 = HelpfulFunctions.RelativeCoord(y);
                 if (Canvas.GetLeft(elem) - realSpeed >= 0.0)
                 {
-                    Canvas.SetLeft(elem, Canvas.GetLeft(elem) - realSpeed);
+                    if (!fieldOfBattle[x0][y0] && y == HelpfulFunctions.AbsoluteCoord(y0))
+                    {
+                        Canvas.SetLeft(elem, Canvas.GetLeft(elem) - realSpeed);
+                    }
+                    else if (!fieldOfBattle[x0][y0] && fieldOfBattle[x0][y0 + 1])
+                    {
+                        /*if (Canvas.GetTop(elem) - realSpeed >= HelpfulFunctions.AbsoluteCoord(y0))
+                        {
+                            Canvas.SetTop(elem, Canvas.GetTop(elem) - realSpeed);
+                        }
+                        else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0));*/
+                    }
+                    else if (fieldOfBattle[x0][y0] && y != HelpfulFunctions.AbsoluteCoord(y0) && !fieldOfBattle[x0][y0 + 1])
+                    {
+                        if (Canvas.GetTop(elem) + elem.Height + realSpeed <= HelpfulFunctions.AbsoluteCoord(y0 + 2))
+                        {
+                            Canvas.SetTop(elem, Canvas.GetTop(elem) + realSpeed);
+                        }
+                        else Canvas.SetTop(elem, HelpfulFunctions.AbsoluteCoord(y0 + 2) - elem.Height);
+                    }
+                    else Canvas.SetLeft(elem, HelpfulFunctions.AbsoluteCoord(x0 + 1));
                 }
-                else if (Canvas.GetLeft(elem) != 0.0)
-                {
-                    Canvas.SetLeft(elem, 0.0);
-                }
+                else Canvas.SetLeft(elem, 0.0);
             }
         }
 

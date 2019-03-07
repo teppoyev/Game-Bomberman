@@ -20,7 +20,6 @@ namespace Game_Bomberman.Game_Logic
         {
             Speed = 5;
             Health = 3;
-            X = 0; Y = 0;
             NumberOfBombs = 1;
             RangeOfExplosion = 1;
             DamageOfExplosion = 10;
@@ -38,12 +37,11 @@ namespace Game_Bomberman.Game_Logic
                 Focusable = true
             };
         }
-        public Player(ushort _speed, ushort _health, double _x, double _y, ushort _numberOfBombs,
+        public Player(ushort _speed, ushort _health, ushort _numberOfBombs,
             ushort _rangeOfExplosion, ushort _damageOfExplosion, ushort[] _buffs)
         {
             Speed = _speed;
             Health = _health;
-            X = _x; Y = _y;
             NumberOfBombs = _numberOfBombs;
             RangeOfExplosion = _rangeOfExplosion;
             DamageOfExplosion = _damageOfExplosion;
