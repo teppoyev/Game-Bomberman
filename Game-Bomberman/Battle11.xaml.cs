@@ -15,24 +15,24 @@ namespace Game_Bomberman
     /// </summary>
     public partial class Battle11 : Page
     {
-        public const double kspeed = 1.1;
-        public const int numberOfEnemies = 3;
-        public int widthOfFieldOfBattle = 25;
-        public int heightOfFieldOfBattle = 13;
-        public int numberOfUnDestroyableBlocks;
-        public int numberOfDestroyableBlocks;
+        private const double coefOfDeath = 0.25;
+        private const double kspeed = 1.1;
+        private int numberOfEnemies = 6;
+        private int widthOfFieldOfBattle = 25;
+        private int heightOfFieldOfBattle = 13;
+        private int numberOfUnDestroyableBlocks;
+        private int numberOfDestroyableBlocks;
         private DispatcherTimer timer, timer1;
-        private System.Drawing.Bitmap[][] explosions;
         private bool movingDown = false, movingUp = false, movingRight = false, movingLeft = false;
         private bool lastUR = false, lastRD = false, lastDL = false, lastLU = false;
         private int positionOfPlayerInCanvas;
         private double workWidth, workHeight;
-        public bool[][] fieldOfBattle;
-        public bool[][] fieldOfBombs;
-        Queue<Bomb> bombs;
-        Player player;
-        Enemy[] enemies = new Gabaijito[numberOfEnemies];
-        Block[][] blocks;
+        private bool[][] fieldOfBattle;
+        private bool[][] fieldOfBombs;
+        private Queue<Bomb> bombs;
+        private Player player;
+        private List<Enemy> enemies;
+        private Block[][] blocks;
 
         public Battle11()
         {
@@ -106,6 +106,7 @@ namespace Game_Bomberman
             }
 
             //put ememies to field
+            enemies = new List<Enemy>(numberOfEnemies);
             for (int i = 0; i < numberOfEnemies; ++i)
             {
                 Random rnd = new Random(i);
@@ -115,7 +116,7 @@ namespace Game_Bomberman
                     x0 = rnd.Next(widthOfFieldOfBattle);
                     y0 = rnd.Next(heightOfFieldOfBattle);
                 } while (fieldOfBattle[x0][y0] || (x0 < widthOfFieldOfBattle / 2 && y0 < heightOfFieldOfBattle / 2));
-                enemies[i] = new Gabaijito();
+                enemies.Add(new Gabaijito());
                 Canvas.SetLeft(enemies[i].Body, HelpfulFunctions.AbsoluteCoord(x0));
                 Canvas.SetTop(enemies[i].Body, HelpfulFunctions.AbsoluteCoord(y0));
                 enemies[i].Direction = rnd.Next(4) + 1;
@@ -135,35 +136,11 @@ namespace Game_Bomberman
             };
             timer.Tick += Player_Moving;
             timer.Tick += Enemies_Moving;
+            timer.Tick += Enemies_Attacking;
             timer.Start();
 
             //init bombs;
-            bombs = new Queue<Game_Logic.Bomb>(10);
-
-            //init textures of explosions
-            explosions = new System.Drawing.Bitmap[9][];
-            for (int i = 0; i < 9; ++i)
-            {
-                explosions[i] = new System.Drawing.Bitmap[4];
-            }
-            explosions[0][0] = Battle.explosionCenter1; explosions[0][1] = Battle.explosionCenter2;
-            explosions[0][2] = Battle.explosionCenter3; explosions[0][3] = Battle.explosionCenter4;
-            explosions[1][0] = Battle.explosionLeft1; explosions[1][1] = Battle.explosionLeft2;
-            explosions[1][2] = Battle.explosionLeft3; explosions[1][3] = Battle.explosionLeft4;
-            explosions[2][0] = Battle.explosionLeftEnding1; explosions[2][1] = Battle.explosionLeftEnding2;
-            explosions[2][2] = Battle.explosionLeftEnding3; explosions[2][3] = Battle.explosionLeftEnding4;
-            explosions[3][0] = Battle.explosionUp1; explosions[3][1] = Battle.explosionUp2;
-            explosions[3][2] = Battle.explosionUp3; explosions[3][3] = Battle.explosionUp4;
-            explosions[4][0] = Battle.explosionUpEnding1; explosions[4][1] = Battle.explosionUpEnding2;
-            explosions[4][2] = Battle.explosionUpEnding3; explosions[4][3] = Battle.explosionUpEnding4;
-            explosions[5][0] = Battle.explosionRight1; explosions[5][1] = Battle.explosionRight2;
-            explosions[5][2] = Battle.explosionRight3; explosions[5][3] = Battle.explosionRight4;
-            explosions[6][0] = Battle.explosionRightEnding1; explosions[6][1] = Battle.explosionRightEnding2;
-            explosions[6][2] = Battle.explosionRightEnding3; explosions[6][3] = Battle.explosionRightEnding4;
-            explosions[7][0] = Battle.explosionDown1; explosions[7][1] = Battle.explosionDown2;
-            explosions[7][2] = Battle.explosionDown3; explosions[7][3] = Battle.explosionDown4;
-            explosions[8][0] = Battle.explosionDownEnding1; explosions[8][1] = Battle.explosionDownEnding2;
-            explosions[8][2] = Battle.explosionDownEnding3; explosions[8][3] = Battle.explosionDownEnding4;
+            bombs = new Queue<Bomb>(10);
         }
 
         private void Grid0_Loaded(object sender, EventArgs e)
@@ -773,6 +750,45 @@ namespace Game_Bomberman
             };
         }
 
+        private void Enemies_Attacking(object sender, EventArgs e)
+        {
+            if (player.Body != null)
+            {
+                Rectangle elem; double x1, y1; double x = Canvas.GetLeft(player.Body), y = Canvas.GetTop(player.Body);
+                for (int i = 0; i < numberOfEnemies; ++i)
+                {
+                    elem = enemies[i].Body; x1 = Canvas.GetLeft(elem); y1 = Canvas.GetTop(elem);
+                    if (x1 + elem.Width < x + elem.Width * coefOfDeath)
+                    {
+                        if (y1 + elem.Height >= y + elem.Height * coefOfDeath && y1 < y + elem.Height - elem.Height * coefOfDeath)
+                        {
+                            if (x1 + elem.Width >= x + elem.Width * coefOfDeath)
+                            {
+                                Death(player); break;
+                            }
+                        }
+                    }
+                    else if (x1 < x + elem.Width - elem.Width * coefOfDeath)
+                    {
+                        if (y1 + elem.Height >= y + elem.Height * coefOfDeath && y1 < y + elem.Height - elem.Height * coefOfDeath)
+                        {
+                            Death(player); break;
+                        }
+                    }
+                    else
+                    {
+                        if (y1 + elem.Height >= y + elem.Height * coefOfDeath && y1 < y + elem.Height - elem.Height * coefOfDeath)
+                        {
+                            if (x1 < x + elem.Width - elem.Width * coefOfDeath)
+                            {
+                                Death(player); break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         private bool CheckDirection(int direction, int x, int y)
         {
             if (x < widthOfFieldOfBattle - 1)
@@ -1001,13 +1017,8 @@ namespace Game_Bomberman
             {
                 Interval = new TimeSpan(0, 0, 0, 0, 10)
             };
-            timer1.Tick += Timer1_Tick;
+            timer1.Tick += (object obj, EventArgs e) => { timer1.Stop(); };
             timer1.Start();
-        }
-
-        private void Timer1_Tick(object obj, EventArgs e)
-        {
-            timer1.Stop();
         }
 
         private void OnClickQuitOk(object obj, EventArgs e)
@@ -1265,14 +1276,17 @@ namespace Game_Bomberman
 
             var timer = new DispatcherTimer
             {
-                Interval = new TimeSpan(625000)
+                Interval = TimeSpan.FromMilliseconds(40)
             };
             int j = 0;
-            timer.Tick += (object obj, EventArgs e) => TextureChanging(obj, e, j++, recs, a, b, c, toDelete);
+            timer.Tick += (object obj, EventArgs e) => ExplosingTextureChanging(obj, e, j++, recs, a, b, c, toDelete);
+            timer.Tick += (object obj, EventArgs e) => CheckDamage(obj, e, HelpfulFunctions.AbsoluteCoord(x), HelpfulFunctions.AbsoluteCoord(y),
+                HelpfulFunctions.AbsoluteCoord(a - 1), HelpfulFunctions.AbsoluteCoord(c - b), HelpfulFunctions.AbsoluteCoord(b - a),
+                HelpfulFunctions.AbsoluteCoord(recs.Count - c));
             timer.Start();
         }
 
-        private void TextureChanging(object obj, EventArgs e, int i, List<Rectangle> recs, int a, int b, int c, List<Rectangle> toDelete)
+        private void ExplosingTextureChanging(object obj, EventArgs e, int i, List<Rectangle> recs, int a, int b, int c, List<Rectangle> toDelete)
         {
             if (i == 0)
             {
@@ -1280,51 +1294,51 @@ namespace Game_Bomberman
             }
             if (i == 0 || i == 6)
             {
-                recs.ElementAt(0).Fill = HelpfulFunctions.BitmapToBrush(explosions[0][0]);
-                for (int k = 1; k < a - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[1][0]);
-                if (a > 1) recs.ElementAt(a - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[2][0]);
-                for (int k = a; k < b - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[5][0]);
-                if (b > a) recs.ElementAt(b - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[6][0]);
-                for (int k = b; k < c - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[3][0]);
-                if (c > b) recs.ElementAt(c - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[4][0]);
-                for (int k = c; k < recs.Count - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[7][0]);
-                if (recs.Count > c) recs.ElementAt(recs.Count - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[8][0]);
+                recs.ElementAt(0).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[0][0]);
+                for (int k = 1; k < a - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[1][0]);
+                if (a > 1) recs.ElementAt(a - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[2][0]);
+                for (int k = a; k < b - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[5][0]);
+                if (b > a) recs.ElementAt(b - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[6][0]);
+                for (int k = b; k < c - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[3][0]);
+                if (c > b) recs.ElementAt(c - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[4][0]);
+                for (int k = c; k < recs.Count - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[7][0]);
+                if (recs.Count > c) recs.ElementAt(recs.Count - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[8][0]);
             }
             else if (i == 1 || i == 5)
             {
-                recs.ElementAt(0).Fill = HelpfulFunctions.BitmapToBrush(explosions[0][1]);
-                for (int k = 1; k < a - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[1][1]);
-                if (a > 1) recs.ElementAt(a - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[2][1]);
-                for (int k = a; k < b - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[5][1]);
-                if (b > a) recs.ElementAt(b - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[6][1]);
-                for (int k = b; k < c - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[3][1]);
-                if (c > b) recs.ElementAt(c - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[4][1]);
-                for (int k = c; k < recs.Count - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[7][1]);
-                if (recs.Count > c) recs.ElementAt(recs.Count - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[8][1]);
+                recs.ElementAt(0).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[0][1]);
+                for (int k = 1; k < a - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[1][1]);
+                if (a > 1) recs.ElementAt(a - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[2][1]);
+                for (int k = a; k < b - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[5][1]);
+                if (b > a) recs.ElementAt(b - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[6][1]);
+                for (int k = b; k < c - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[3][1]);
+                if (c > b) recs.ElementAt(c - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[4][1]);
+                for (int k = c; k < recs.Count - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[7][1]);
+                if (recs.Count > c) recs.ElementAt(recs.Count - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[8][1]);
             }
             else if (i == 2 || i == 4)
             {
-                recs.ElementAt(0).Fill = HelpfulFunctions.BitmapToBrush(explosions[0][2]);
-                for (int k = 1; k < a - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[1][2]);
-                if (a > 1) recs.ElementAt(a - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[2][2]);
-                for (int k = a; k < b - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[5][2]);
-                if (b > a) recs.ElementAt(b - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[6][2]);
-                for (int k = b; k < c - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[3][2]);
-                if (c > b) recs.ElementAt(c - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[4][2]);
-                for (int k = c; k < recs.Count - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[7][2]);
-                if (recs.Count > c) recs.ElementAt(recs.Count - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[8][2]);
+                recs.ElementAt(0).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[0][2]);
+                for (int k = 1; k < a - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[1][2]);
+                if (a > 1) recs.ElementAt(a - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[2][2]);
+                for (int k = a; k < b - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[5][2]);
+                if (b > a) recs.ElementAt(b - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[6][2]);
+                for (int k = b; k < c - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[3][2]);
+                if (c > b) recs.ElementAt(c - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[4][2]);
+                for (int k = c; k < recs.Count - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[7][2]);
+                if (recs.Count > c) recs.ElementAt(recs.Count - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[8][2]);
             }
             else if (i == 3)
             {
-                recs.ElementAt(0).Fill = HelpfulFunctions.BitmapToBrush(explosions[0][3]);
-                for (int k = 1; k < a - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[1][3]);
-                if (a > 1) recs.ElementAt(a - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[2][3]);
-                for (int k = a; k < b - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[5][3]);
-                if (b > a) recs.ElementAt(b - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[6][3]);
-                for (int k = b; k < c - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[3][3]);
-                if (c > b) recs.ElementAt(c - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[4][3]);
-                for (int k = c; k < recs.Count - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(explosions[7][3]);
-                if (recs.Count > c) recs.ElementAt(recs.Count - 1).Fill = HelpfulFunctions.BitmapToBrush(explosions[8][3]);
+                recs.ElementAt(0).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[0][3]);
+                for (int k = 1; k < a - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[1][3]);
+                if (a > 1) recs.ElementAt(a - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[2][3]);
+                for (int k = a; k < b - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[5][3]);
+                if (b > a) recs.ElementAt(b - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[6][3]);
+                for (int k = b; k < c - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[3][3]);
+                if (c > b) recs.ElementAt(c - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[4][3]);
+                for (int k = c; k < recs.Count - 1; ++k) recs.ElementAt(k).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[7][3]);
+                if (recs.Count > c) recs.ElementAt(recs.Count - 1).Fill = HelpfulFunctions.BitmapToBrush(Bomb.explosions[8][3]);
             }
             else
             {
@@ -1338,6 +1352,146 @@ namespace Game_Bomberman
                     grid1.Children.Remove(toDelete.ElementAt(k));
                 }
                 ((DispatcherTimer)obj).Stop();
+            }
+        }
+
+        private void CheckDamage(object obj, EventArgs e, double x, double y, double left, double up, double right, double down)
+        {
+            Rectangle elem; double x1, y1;
+            if (player.Body != null)
+            {
+                elem = player.Body; x1 = Canvas.GetLeft(elem); y1 = Canvas.GetTop(elem);
+                if (x1 + elem.Width < x + elem.Width * coefOfDeath)
+                {
+                    if (y1 + elem.Height >= y + elem.Height * coefOfDeath && y1 < y + elem.Height - elem.Height * coefOfDeath)
+                    {
+                        if (x1 + elem.Width >= x - left + elem.Width * coefOfDeath)
+                        {
+                            Death(player);
+                        }
+                    }
+                }
+                else if (x1 < x + elem.Width - elem.Width * coefOfDeath)
+                {
+                    if (y1 + elem.Height >= y - up + elem.Height * coefOfDeath && y1 < y + down + elem.Height - elem.Height * coefOfDeath)
+                    {
+                        Death(player);
+                    }
+                }
+                else
+                {
+                    if (y1 + elem.Height >= y + elem.Height * coefOfDeath && y1 < y + elem.Height - elem.Height * coefOfDeath)
+                    {
+                        if (x1 < x + right + elem.Width - elem.Width * coefOfDeath)
+                        {
+                            Death(player);
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < numberOfEnemies; ++i)
+            {
+                elem = enemies[i].Body; x1 = Canvas.GetLeft(elem); y1 = Canvas.GetTop(elem);
+                if (x1 + elem.Width < x + elem.Width * coefOfDeath)
+                {
+                    if (y1 + elem.Height >= y + elem.Height * coefOfDeath && y1 < y + elem.Height - elem.Height * coefOfDeath)
+                    {
+                        if (x1 + elem.Width >= x - left + elem.Width * coefOfDeath)
+                        {
+                            Death(enemies[i]);
+                        }
+                    }
+                }
+                else if (x1 < x + elem.Width - elem.Width * coefOfDeath)
+                {
+                    if (y1 + elem.Height >= y - up + elem.Height * coefOfDeath && y1 < y + down + elem.Height - elem.Height * coefOfDeath)
+                    {
+                        Death(enemies[i]);
+                    }
+                }
+                else
+                {
+                    if (y1 + elem.Height >= y + elem.Height * coefOfDeath && y1 < y + elem.Height - elem.Height * coefOfDeath)
+                    {
+                        if (x1 < x + right + elem.Width - elem.Width * coefOfDeath)
+                        {
+                            Death(enemies[i]);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void Death(Creature creature)
+        {
+            Rectangle rec = new Rectangle
+            {
+                Width = creature.Body.Width,
+                Height = creature.Body.Height,
+                Fill = HelpfulFunctions.BitmapToBrush(Creature.texturesOfDeath[0])
+            };
+            Canvas.SetLeft(rec, Canvas.GetLeft(creature.Body));
+            Canvas.SetTop(rec, Canvas.GetTop(creature.Body));
+            Panel.SetZIndex(rec, Panel.GetZIndex(creature.Body));
+            grid1.Children.Add(rec);
+
+
+            DispatcherTimer _timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(150)
+            };
+            int k = 0;
+
+            if (creature.Equals(player))
+            {
+                timer.Tick -= Player_Moving;
+                if (numberOfEnemies != 0) _timer.Tick += (object o, EventArgs ev) => DeathTextureChanging(o, ev, rec, k++, true, false);
+                else _timer.Tick += (object o, EventArgs ev) => DeathTextureChanging(o, ev, rec, k++, true, true);
+            }
+            else
+            {
+                for (int i = 0; i < numberOfEnemies; ++i)
+                {
+                    if (creature.Equals(enemies[i]))
+                    {
+                        enemies.RemoveAt(i);
+                        break;
+                    }
+                }
+                --numberOfEnemies;
+                if (numberOfEnemies != 0) _timer.Tick += (object o, EventArgs ev) => DeathTextureChanging(o, ev, rec, k++, false, false);
+                else _timer.Tick += (object o, EventArgs ev) => DeathTextureChanging(o, ev, rec, k++, false, true);
+            }
+            grid1.Children.Remove(creature.Body);
+            creature.Body = null;
+            _timer.Start();
+        }
+
+        private void DeathTextureChanging(object obj, EventArgs e, Rectangle rec, int counter, bool restart, bool isClear)
+        {
+            if (counter < 10) rec.Fill = HelpfulFunctions.BitmapToBrush(Creature.texturesOfDeath[counter]);
+            else
+            {
+                grid1.Children.Remove(rec);
+                ((DispatcherTimer)obj).Stop();
+                if (restart)
+                {
+                    --player.Health;
+                    var _timer = new DispatcherTimer
+                    {
+                        Interval = TimeSpan.FromSeconds(2)
+                    };
+                    _timer.Tick += (object o, EventArgs ev) =>
+                    {
+                        ((DispatcherTimer)o).Stop();
+                        ((MainWindow)Parent).Content = new Battle11();
+                    };
+                    _timer.Start();
+                } else if (isClear)
+                {
+                    ((MainWindow)Parent).Content = new MainMenu();
+                }
             }
         }
     }

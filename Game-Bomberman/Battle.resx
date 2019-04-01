@@ -262,4 +262,34 @@
   <data name="burnedLeaves" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\burnedLeaves.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="deadCreature1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\deadCreature1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="deadCreature10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\deadCreature10.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="deadCreature2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\deadCreature2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="deadCreature3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\deadCreature3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="deadCreature4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\deadCreature4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="deadCreature5" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\deadCreature5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="deadCreature6" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\deadCreature6.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="deadCreature7" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\deadCreature7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="deadCreature8" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\deadCreature8.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="deadCreature9" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\deadCreature9.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

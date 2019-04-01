@@ -13,6 +13,12 @@ namespace Game_Bomberman.Game_Logic
 
         public const ushort maxNumberOfBuffs = 7;
 
+        public static System.Drawing.Bitmap[] texturesOfDeath = new System.Drawing.Bitmap[10]
+        {
+            Battle.deadCreature1, Battle.deadCreature2, Battle.deadCreature3, Battle.deadCreature4, Battle.deadCreature5,
+            Battle.deadCreature6, Battle.deadCreature7, Battle.deadCreature8, Battle.deadCreature9, Battle.deadCreature10
+        };
+
         public ushort Speed { get => speed; set => speed = value; }
         public ushort[] Buffs { get => buffs; set => buffs = value; }
 
