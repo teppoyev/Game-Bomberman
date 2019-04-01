@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Game_Bomberman.Game_Logic
 {
@@ -36,6 +37,7 @@ namespace Game_Bomberman.Game_Logic
                 Fill = HelpfulFunctions.BitmapToBrush(Texture),
                 Focusable = true
             };
+            Panel.SetZIndex(Body, 90);
         }
         public Player(ushort _speed, ushort _health, ushort _numberOfBombs,
             ushort _rangeOfExplosion, ushort _damageOfExplosion, ushort[] _buffs)

@@ -10,7 +10,7 @@
     <Page.Background>
         <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/BackbackgroundOfBattle.jpg" TileMode="FlipXY" Stretch="Fill"/>
     </Page.Background>
-    <Grid x:Name="grid0" Loaded="grid0_Loaded" Width="1920" Height="1080">
+    <Grid x:Name="grid0" Loaded="Grid0_Loaded" Width="1920" Height="1080">
         <Grid.RowDefinitions>
             <RowDefinition Height="53"/>
             <RowDefinition Height="975"/>
@@ -26,6 +26,8 @@
             <Canvas.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/BackgroundOfBattle.jpg" TileMode="Tile"/>
             </Canvas.Background>
+            <MediaElement x:Name="BattleMusic" Source="pack://siteoforigin:,,,/Resources/firstChapter.mp3" LoadedBehavior="Manual"/>
+            <MediaElement x:Name="BlastSound" Source="pack://siteoforigin:,,,/Resources/Blast.wav" LoadedBehavior="Manual"/>
             <Image x:Name="quitImage" Source="pack://siteoforigin:,,,/Resources/requestForExit.png" Opacity="0.0" Panel.ZIndex="100" Margin="-23,-53,0,0" />
             <StackPanel x:Name="quitButtonsPanel" IsEnabled="false" Orientation="Horizontal" Panel.ZIndex="100">
             </StackPanel>

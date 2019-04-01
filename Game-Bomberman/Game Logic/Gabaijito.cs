@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Game_Bomberman.Game_Logic
 {
-    class Gabaijito : Creature
+    class Gabaijito : Enemy
     {
         public Gabaijito()
         {
-            Speed = 5;
+            Speed = 2;
             Health = 20;
             Buffs = new ushort[maxNumberOfBuffs];
             for (int i = 0; i < maxNumberOfBuffs; ++i)
@@ -24,6 +25,7 @@ namespace Game_Bomberman.Game_Logic
                 Height = standartSize,
                 Fill = HelpfulFunctions.BitmapToBrush(Texture)
             };
+            Panel.SetZIndex(Body, 40);
         }
         public override void ActionWhenMove(object sender, EventArgs e) { }
         public override void ActionWhenAttack(object sender, EventArgs e) { }

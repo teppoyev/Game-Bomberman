@@ -82,6 +82,7 @@ namespace Game_Bomberman
 
         private void IncludingLabel(object obj, EventArgs e)
         {
+            menuMusic.MediaEnded += (object o, RoutedEventArgs ev) => { menuMusic.Play(); };
             menuMusic.Play();
             ButtonsPanel.IsEnabled = true;
             ButtonsPanel.Width = MainWindow.width / 2;

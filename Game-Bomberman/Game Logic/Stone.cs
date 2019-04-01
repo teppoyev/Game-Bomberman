@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Game_Bomberman.Game_Logic
 {
@@ -19,6 +20,7 @@ namespace Game_Bomberman.Game_Logic
                 Height = standartSize,
                 Fill = HelpfulFunctions.BitmapToBrush(Texture)
             };
+            Panel.SetZIndex(Body, 10);
         }
 
         public override void ActionWhenDamaged(object sender, EventArgs e) { }

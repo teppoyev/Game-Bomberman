@@ -82,7 +82,9 @@
       <DependentUpon>Battle11.xaml</DependentUpon>
     </Compile>
     <Compile Include="Game Logic\Block.cs" />
+    <Compile Include="Game Logic\Bomb.cs" />
     <Compile Include="Game Logic\Creature.cs" />
+    <Compile Include="Game Logic\Enemy.cs" />
     <Compile Include="Game Logic\Gabaijito.cs" />
     <Compile Include="Game Logic\Leaves.cs" />
     <Compile Include="Game Logic\Object.cs" />
@@ -190,6 +192,234 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\leaves.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\firstChapter.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bomb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Blast.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionCenter1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionCenter2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionCenter3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionCenter4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionDown1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionDown2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionDown3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionDown4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionDownEnding1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionDownEnding2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionDownEnding3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionDownEnding4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionLeft1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionLeft2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionLeft3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionLeft4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionLeftEnding1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionLeftEnding2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionLeftEnding3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionLeftEnding4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionRight1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionRIght2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionRIght3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionRight4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionRightEnding1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionRightEnding2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionRightEnding3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionRightEnding4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionUp1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionUp2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionUp3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionUp4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionUpEnding1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionUpEnding2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionUpEnding3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosions\explosionUpEnding4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionCenter1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionCenter2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionCenter3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionCenter4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionDown1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionDown2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionDown3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionDown4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionDownEnding1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionDownEnding2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionDownEnding3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionDownEnding4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionLeft1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionLeft2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionLeft3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionLeft4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionLeftEnding1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionLeftEnding2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionLeftEnding3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionLeftEnding4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionRight1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionRight2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionRight3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionRight4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionRightEnding1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionRightEnding2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionRightEnding3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionRightEnding4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionUp1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionUp2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionUp3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionUp4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionUpEnding1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionUpEnding2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionUpEnding3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosionUpEnding4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\burnedLeaves.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
