@@ -15,6 +15,7 @@
         <Image x:Name="quitImage" Source="pack://siteoforigin:,,,/Resources/requestForExit.png" Opacity="0.0"/>
         <StackPanel x:Name="ButtonsPanel" Canvas.Bottom="50" IsEnabled="false">
         </StackPanel>
+        <StackPanel x:Name="gamePanel" IsEnabled="false" Orientation="Vertical" Background="#FF00005D" Opacity="0.0"/>
         <StackPanel x:Name="quitButtonsPanel" IsEnabled="false" Orientation="Horizontal">
         </StackPanel>
         <MediaElement x:Name="menuMusic" Source="pack://siteoforigin:,,,/Resources/mainMenuTheme.mp3" LoadedBehavior="Manual"/>
